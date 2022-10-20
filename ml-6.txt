@@ -1,0 +1,174 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+import os
+print(os.listdir("../input"))
+
+%%time
+file = ('../input/adult-census-income/adult.csv')
+df = pd.read_csv(file, encoding='latin-1')
+
+df.shape()
+df.head()
+df.info()
+
+df[df == '?'] = np.nan
+df.info()
+
+for col in ['workclass', 'occupation', 'native.country']:
+    df[col].fillna(df[col].mode()[0], inplace=True)
+
+df.isnull().sum()
+X = df.drop(['income'], axis=1)
+
+y = df['income']
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
+
+from sklearn import preprocessing
+
+categorical = ['workclass', 'education', 'marital.status', 'occupation', 'relationship', 'race', 'sex', 'native.country']
+for feature in categorical:
+        le = preprocessing.LabelEncoder()
+        X_train[feature] = le.fit_transform(X_train[feature])
+        X_test[feature] = le.transform(X_test[feature])
+X_train.head()
+
+Output:
+age 	workclass 	fnlwgt 	education 	education.num 	marital.status 	occupation 	relationship 	race 	sex 	capital.gain 	capital.loss 	hours.per.week 	native.country
+0 	0.101484 	2.600478 	-1.494279 	-0.332263 	1.133894 	-0.402341 	-0.782234 	2.214196 	0.39298 	-1.430470 	-0.145189 	-0.217407 	-1.662414 	0.262317
+1 	0.028248 	-1.884720 	0.438778 	0.184396 	-0.423425 	-0.402341 	-0.026696 	-0.899410 	0.39298 	0.699071 	-0.145189 	-0.217407 	-0.200753 	0.262317
+2 	0.247956 	-0.090641 	0.045292 	1.217715 	-0.034095 	0.926666 	-0.782234 	-0.276689 	0.39298 	-1.430470 	-0.145189 	-0.217407 	-0.038346 	0.262317
+3 	-0.850587 	-1.884720 	0.793152 	0.184396 	-0.423425 	0.926666 	-0.530388 	0.968753 	0.39298 	0.699071 	-0.145189 	-0.217407 	-0.038346 	0.262317
+4 	-0.044989 	-2.781760 	-0.853275 	0.442726 	1.523223 	-0.402341 	-0.782234 	-0.899410 	0.39298 	0.699071 	-0.145189 	-0.217407 	-0.038346 	0.262317
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+y_pred = logreg.predict(X_test)
+
+print('Logistic Regression accuracy score with all the features: {0:0.4f}'. format(accuracy_score(y_test, y_pred)))
+
+Output:
+Logistic Regression accuracy score with all the features: 0.8217
+
+from sklearn.decomposition import PCA
+pca = PCA()
+X_train = pca.fit_transform(X_train)
+pca.explained_variance_ratio_
+
+Output:
+array([0.14757168, 0.10182915, 0.08147199, 0.07880174, 0.07463545,
+       0.07274281, 0.07009602, 0.06750902, 0.0647268 , 0.06131155,
+       0.06084207, 0.04839584, 0.04265038, 0.02741548])
+
+X = df.drop(['income','native.country'], axis=1)
+y = df['income']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
+
+
+categorical = ['workclass', 'education', 'marital.status', 'occupation', 'relationship', 'race', 'sex']
+for feature in categorical:
+        le = preprocessing.LabelEncoder()
+        X_train[feature] = le.fit_transform(X_train[feature])
+        X_test[feature] = le.transform(X_test[feature])
+
+
+X_train = pd.DataFrame(scaler.fit_transform(X_train), columns = X.columns)
+
+X_test = pd.DataFrame(scaler.transform(X_test), columns = X.columns)
+
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+y_pred = logreg.predict(X_test)
+
+print('Logistic Regression accuracy score with the first 13 features: {0:0.4f}'. format(accuracy_score(y_test, y_pred)))
+
+Output:
+Logistic Regression accuracy score with the first 13 features: 0.8213
+
+X = df.drop(['income','native.country', 'hours.per.week'], axis=1)
+y = df['income']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
+
+
+categorical = ['workclass', 'education', 'marital.status', 'occupation', 'relationship', 'race', 'sex']
+for feature in categorical:
+        le = preprocessing.LabelEncoder()
+        X_train[feature] = le.fit_transform(X_train[feature])
+        X_test[feature] = le.transform(X_test[feature])
+
+
+X_train = pd.DataFrame(scaler.fit_transform(X_train), columns = X.columns)
+
+X_test = pd.DataFrame(scaler.transform(X_test), columns = X.columns)
+
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+y_pred = logreg.predict(X_test)
+
+print('Logistic Regression accuracy score with the first 12 features: {0:0.4f}'. format(accuracy_score(y_test, y_pred)))
+
+Output:
+Logistic Regression accuracy score with the first 12 features: 0.8227
+
+X = df.drop(['income','native.country', 'hours.per.week', 'capital.loss'], axis=1)
+y = df['income']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
+
+
+categorical = ['workclass', 'education', 'marital.status', 'occupation', 'relationship', 'race', 'sex']
+for feature in categorical:
+        le = preprocessing.LabelEncoder()
+        X_train[feature] = le.fit_transform(X_train[feature])
+        X_test[feature] = le.transform(X_test[feature])
+
+
+X_train = pd.DataFrame(scaler.fit_transform(X_train), columns = X.columns)
+
+X_test = pd.DataFrame(scaler.transform(X_test), columns = X.columns)
+
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+y_pred = logreg.predict(X_test)
+
+print('Logistic Regression accuracy score with the first 11 features: {0:0.4f}'. format(accuracy_score(y_test, y_pred)))
+
+Output:
+Logistic Regression accuracy score with the first 11 features: 0.8186
+
+X = df.drop(['income'], axis=1)
+y = df['income']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
+
+
+categorical = ['workclass', 'education', 'marital.status', 'occupation', 'relationship', 'race', 'sex', 'native.country']
+for feature in categorical:
+        le = preprocessing.LabelEncoder()
+        X_train[feature] = le.fit_transform(X_train[feature])
+        X_test[feature] = le.transform(X_test[feature])
+
+
+X_train = pd.DataFrame(scaler.fit_transform(X_train), columns = X.columns)
+
+
+pca= PCA()
+pca.fit(X_train)
+cumsum = np.cumsum(pca.explained_variance_ratio_)
+dim = np.argmax(cumsum >= 0.90) + 1
+print('The number of dimensions required to preserve 90% of variance is',dim)
+
+Output:
+The number of dimensions required to preserve 90% of variance is 12
